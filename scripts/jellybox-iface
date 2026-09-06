@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Privileged helper for JellyBox: switch a wireless interface between managed and
+# monitor mode, or change its MAC address. Installed root-owned to
+# /usr/local/sbin and whitelisted for passwordless sudo (see
+# setup-privileges.sh). The interface name and operation are validated before
+# being passed to the privileged commands, and arguments are passed as an
+# explicit argv (no shell) so a caller cannot inject extra commands.
+set -euo pipefail
+
+IFACE="${1:-}"
+OP="${2:-}"
+ARG="${3:-}"
+
+[[ "$IFACE" =~ ^[a-zA-Z0-9._-]{2,20}$ ]] || { echo "invalid interface: $IFACE" >&2; exit 2; }
+
+case "$OP" in
+    monitor|managed)
+        ip link set "$IFACE" down
+        iw dev "$IFACE" set type "$OP"
+        ip link set "$IFACE" up
+        echo "OK $IFACE -> $OP"
+        ;;
+    mac)
+        [[ "$ARG" =~ ^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$ ]] || { echo "invalid mac: $ARG" >&2; exit 2; }
+        ip link set "$IFACE" down
+        ip link set "$IFACE" address "$ARG"
+        ip link set "$IFACE" up
+        echo "OK $IFACE -> $ARG"
+        ;;
+    *)
+        echo "invalid operation: $OP" >&2
+        exit 2
+        ;;
+esac

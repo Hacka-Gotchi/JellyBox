@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Privileged helper for JellyBox packet inspection. Runs a FIXED, safe tcpdump
+# (no user-controllable dangerous flags like -z) on a validated interface.
+# Installed root-owned and whitelisted via setup-privileges.sh.
+set -euo pipefail
+
+OP="${1:-}"
+IFACE="${2:-}"
+
+[[ "$IFACE" =~ ^[a-zA-Z0-9._-]{2,20}$ ]] || { echo "invalid interface: $IFACE" >&2; exit 2; }
+
+case "$OP" in
+    vlan)
+        # capture 802.1Q-tagged frames for up to 8s / 200 packets
+        timeout 8 tcpdump -e -l -nn -i "$IFACE" -c 200 vlan 2>&1 || true
+        ;;
+    *)
+        echo "invalid operation: $OP" >&2
+        exit 2
+        ;;
+esac

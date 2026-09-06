@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Privileged helper for JellyBox WireGuard control. Installed root-owned to
+# /usr/local/sbin and whitelisted for passwordless sudo (see setup-privileges.sh).
+# Only lists tunnels, shows status, and brings a named tunnel up/down.
+set -euo pipefail
+
+OP="${1:-}"
+NAME="${2:-}"
+
+case "$OP" in
+    list)
+        ls -1 /etc/wireguard/ 2>/dev/null | grep -E '\.conf$' | sed 's/\.conf$//' || true
+        ;;
+    status)
+        wg show 2>/dev/null || true
+        ;;
+    up|down)
+        [[ "$NAME" =~ ^[A-Za-z0-9_-]{1,32}$ ]] || { echo "invalid tunnel: $NAME" >&2; exit 2; }
+        wg-quick "$OP" "$NAME"
+        ;;
+    *)
+        echo "invalid operation: $OP" >&2
+        exit 2
+        ;;
+esac
