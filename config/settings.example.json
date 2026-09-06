@@ -1,0 +1,9 @@
+{
+  "theme": "green",
+  "brightness": 70,
+  "wifi_interface": null,
+  "ssh_host": "",
+  "ssh_user": "",
+  "ssh_cmd": "uptime",
+  "nmap_args": "-Pn -F -T4"
+}
