@@ -1,0 +1,2 @@
+# JellyBox Python dependencies (shared runtime + tests).
+Pillow>=10.0

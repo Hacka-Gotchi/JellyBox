@@ -1,0 +1,7 @@
+# JellyBox Raspberry Pi hardware dependencies.
+# On the Pi:  pip install -r requirements-pi.txt --break-system-packages
+Pillow>=10.0
+luma.lcd>=2.11        # ST7735S SPI display driver
+gpiozero>=2.0         # GPIO buttons + PWM backlight
+# Raspberry Pi OS Bookworm/Trixie: RPi.GPIO doesn't work; this drop-in fixes luma.
+rpi-lgpio; platform_machine == "aarch64" or platform_machine == "armv7l"
