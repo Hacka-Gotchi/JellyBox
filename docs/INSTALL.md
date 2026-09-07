@@ -106,6 +106,7 @@ This installs the root-owned helpers:
 - `jellybox-iface`
 - `jellybox-sniff`
 - `jellybox-wg`
+- `jellybox-update` (self-update helper + `jellybox-update@.service` unit)
 
 It also grants the required passwordless `sudo` permissions, installs the
 NetworkManager polkit rule used by JellyBox Wi-Fi features, and whitelists the
@@ -170,10 +171,10 @@ Check that:
 - **Nothing appears on the display** — confirm SPI is enabled and the LCD HAT is
   fully seated on the GPIO header.
 
-- **Image is shifted or has a coloured edge** — adjust `LCD_H_OFFSET` and
-  `LCD_V_OFFSET` in `hardware/pi/pins.py`. Small values such as 1–3 may be
-  required for some LCD panel batches. If red and blue are swapped, check
-  `LCD_BGR`.
+- **Image is shifted or has a coloured edge** — set the offsets in
+  `/etc/jellybox/device.json` (`{"display": {"x_offset": 1, "y_offset": 2}}`).
+  Small values such as 1–3 may be required for some LCD panel batches. If red and
+  blue are swapped, check `LCD_BGR` in `hardware/pi/pins.py`.
 
 - **A tool reports "not found"** — install the corresponding Linux package from
   step 3. See [TOOLS.md](TOOLS.md) for tool-specific dependencies.

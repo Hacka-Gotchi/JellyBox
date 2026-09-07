@@ -33,6 +33,9 @@ argument-validated helper scripts rather than running the whole app as root.
 - **Wi-Fi** — scan nearby networks and connect (with on-screen password entry).
   A supported external USB adapter can be selected as the working interface.
 - **Ping** — editable target, live and cancelable.
+- **Jack Test** — plug into an unknown Ethernet jack and get link, speed/duplex,
+  DHCP/IP/gateway, the LLDP switch name and port, and any observed VLAN IDs on one
+  screen; results can be saved with a room label.
 - **Traceroute** — trace the path to a target and show hops on-device.
 - **Nmap** — editable target and scan arguments; results can be saved.
 - **LLDP Discovery** — show LLDP information advertised by neighboring network
@@ -48,6 +51,7 @@ argument-validated helper scripts rather than running the whole app as root.
 - **Results** — browse saved scan output.
 - **Settings** — theme, brightness, and Wi-Fi/saved-network management.
 - **System** — CPU, temperature, memory, disk, uptime, load; reboot.
+- **Update** — check the latest GitHub release and self-update, with rollback.
 
 Not all information is always available — LLDP requires neighbors that advertise
 it, and VLAN detection requires tagged traffic to actually reach the selected
@@ -154,12 +158,26 @@ under `tests/mocks`. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Troubleshooting
 
-- **Blank or shifted display** — confirm SPI is enabled and adjust
-  `LCD_H_OFFSET` / `LCD_V_OFFSET` in `hardware/pi/pins.py` for your panel batch.
+- **Blank or shifted display** — confirm SPI is enabled and set the offsets in
+  `/etc/jellybox/device.json` for your panel batch (see docs/HARDWARE.md).
 - **A tool reports "not found"** — install its Linux package (see
   [docs/TOOLS.md](docs/TOOLS.md)); `install-pi.sh` covers them all.
 - **Wi-Fi connect / monitor mode / MAC change fails with a permission error** —
   run `sudo bash scripts/setup-privileges.sh`.
+
+## Software Updates
+
+JellyBox can update itself from the menu (**UPDATE**). It checks the latest
+GitHub *release* (not `main`), and on confirmation an independent systemd unit
+(`jellybox-update@<tag>.service`) checks out the release tag, reinstalls Python
+dependencies only when they changed, restarts the app, health-checks it, and
+rolls back to the previous revision if it does not come up. The check needs
+internet; the device runs normally without it. Updating requires JellyBox to be
+a git clone (the default install) and the privileged helpers from
+`setup-privileges.sh`.
+
+Per-device calibration (display offsets) lives in `/etc/jellybox/device.json`,
+outside the source tree, so updates never overwrite it.
 
 ## Responsible Use
 

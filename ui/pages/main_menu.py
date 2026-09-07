@@ -14,6 +14,7 @@ from ui.pages.devices import DevicesPage
 from ui.pages.network_info import NetworkInfoPage
 from ui.pages.reboot import RebootPage
 from ui.pages.settings import SettingsPage
+from ui.pages.system_update import SystemUpdatePage
 from ui.pages.ssh import SshPage
 from ui.pages.system_info import SystemInfoPage
 from ui.pages.terminal import TerminalPage
@@ -27,6 +28,7 @@ MENU_ITEMS = [
     "TERMINAL",
     "TOOLS",
     "SETTINGS",
+    "UPDATE",
     "REBOOT",
 ]
 
@@ -59,6 +61,7 @@ class MainMenuPage(Page):
             "TERMINAL": lambda: TerminalPage(self.ctx),
             "TOOLS": lambda: ToolsPage(self.ctx),
             "SETTINGS": lambda: SettingsPage(self.ctx),
+            "UPDATE": lambda: SystemUpdatePage(self.ctx),
             "REBOOT": lambda: RebootPage(self.ctx),
         }.get(item or "")
         if factory:

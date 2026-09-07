@@ -39,3 +39,17 @@ JOY_PRESS = 13
 KEY1 = 21
 KEY2 = 20
 KEY3 = 16
+
+
+# Per-device display calibration lives outside the tracked source tree, in
+# /etc/jellybox/device.json, so a software update can't overwrite it:
+#   {"display": {"x_offset": 1, "y_offset": 2, "rotate": 0}}
+from core.device_config import display_overrides, load_device_config  # noqa: E402
+
+_overrides = display_overrides(load_device_config())
+if "x_offset" in _overrides:
+    LCD_H_OFFSET = int(_overrides["x_offset"])
+if "y_offset" in _overrides:
+    LCD_V_OFFSET = int(_overrides["y_offset"])
+if "rotate" in _overrides:
+    LCD_ROTATE = int(_overrides["rotate"])

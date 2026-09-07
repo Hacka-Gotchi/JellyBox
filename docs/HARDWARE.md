@@ -87,12 +87,17 @@ interfaces.
 | RESET | 27 |
 | BACKLIGHT | 24 |
 
-If the image is shifted or shows a coloured strip at an edge, adjust
-`LCD_H_OFFSET` and `LCD_V_OFFSET` in
-[`hardware/pi/pins.py`](../hardware/pi/pins.py).
+If the image is shifted or shows a coloured strip at an edge, set the offsets in
+`/etc/jellybox/device.json`, which override the defaults in `pins.py` and are
+not touched by software updates:
+
+```json
+{"display": {"x_offset": 1, "y_offset": 2, "rotate": 0}}
+```
 
 Small offsets, usually around 1–3 pixels, may be required depending on the LCD
-panel batch. If red and blue appear swapped, check the `LCD_BGR` setting.
+panel batch. If red and blue appear swapped, check the `LCD_BGR` setting in
+`pins.py`.
 
 ## Controls GPIO (BCM)
 

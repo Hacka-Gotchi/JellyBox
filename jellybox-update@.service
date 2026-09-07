@@ -1,0 +1,10 @@
+[Unit]
+Description=JellyBox update to %i
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Runs in its own unit (as root), independent of jellybox.service, so restarting
+# the app during the update cannot kill this updater mid-rollback.
+ExecStart=/usr/local/sbin/jellybox-update %i

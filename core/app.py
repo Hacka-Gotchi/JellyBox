@@ -9,6 +9,7 @@ work runs on background workers via the command runner.
 from __future__ import annotations
 
 import logging
+import time
 from dataclasses import dataclass
 
 from hardware.buttons import InputSource
@@ -17,6 +18,9 @@ from ui.page_manager import PageManager
 from ui.theme import Theme
 
 log = logging.getLogger(__name__)
+
+# The updater checks this file's freshness to confirm the UI actually came up.
+_HEARTBEAT = "/run/jellybox/heartbeat"
 
 
 @dataclass
@@ -51,6 +55,7 @@ class App:
         self.display.set_brightness(self.ctx.settings.get("brightness", 70))
 
         frames = 0
+        last_heartbeat = 0.0
         buttons = self.ctx.buttons
         try:
             while self._running:
@@ -66,6 +71,11 @@ class App:
                 self.ctx.pages.draw(self.display)
                 self.display.show()  # the display backend throttles to the frame rate
 
+                now = time.monotonic()
+                if now - last_heartbeat >= 2.0:
+                    self._heartbeat()
+                    last_heartbeat = now
+
                 frames += 1
                 if self.max_frames is not None and frames >= self.max_frames:
                     break
@@ -76,6 +86,14 @@ class App:
 
     def stop(self) -> None:
         self._running = False
+
+    @staticmethod
+    def _heartbeat() -> None:
+        try:
+            with open(_HEARTBEAT, "w") as fh:
+                fh.write(str(time.time()))
+        except OSError:
+            pass  # the runtime dir only exists under the service; harmless otherwise
 
     def shutdown(self) -> None:
         self._running = False

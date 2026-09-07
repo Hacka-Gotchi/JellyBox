@@ -6,6 +6,7 @@ StartLimitIntervalSec=60
 StartLimitBurst=5
 
 [Service]
+RuntimeDirectory=jellybox
 Type=simple
 User=pi
 WorkingDirectory=/home/pi/jellybox
