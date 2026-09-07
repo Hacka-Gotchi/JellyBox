@@ -11,6 +11,7 @@ from hardware.display import Display
 from ui.components.header import draw_header
 from ui.components.menu import Menu
 from ui.page_manager import Page
+from ui.pages.jack_test import JackTestPage
 from ui.pages.lldp import LldpPage
 from ui.pages.mac_spoof import MacSpoofPage
 from ui.pages.nmap_scan import NmapScanPage
@@ -22,8 +23,8 @@ from ui.pages.wifi_scan import WifiScanPage
 from ui.pages.wireguard import WireGuardPage
 from ui.renderer import CONTENT_TOP
 
-TOOL_ITEMS = ["WIFI SCAN", "PING", "TRACEROUTE", "NMAP", "LLDP", "VLAN",
-              "MAC SPOOF", "WIREGUARD", "RESULTS"]
+TOOL_ITEMS = ["JACK TEST", "WIFI SCAN", "PING", "TRACEROUTE", "NMAP", "LLDP",
+              "VLAN", "MAC SPOOF", "WIREGUARD", "RESULTS"]
 
 
 class ToolsPage(Page):
@@ -44,6 +45,7 @@ class ToolsPage(Page):
 
     def _open(self, item: str | None) -> None:
         page = {
+            "JACK TEST": lambda: JackTestPage(self.ctx),
             "WIFI SCAN": lambda: WifiScanPage(self.ctx),
             "PING": lambda: PingPage(self.ctx),
             "TRACEROUTE": lambda: TraceroutePage(self.ctx),

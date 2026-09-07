@@ -17,7 +17,22 @@ The main menu covers the top-level areas; the network tools live under **TOOLS**
 
 ## TOOLS submenu
 
-Order: WIFI SCAN, PING, TRACEROUTE, NMAP, LLDP, VLAN, MAC SPOOF, WIREGUARD, RESULTS.
+Order: JACK TEST, WIFI SCAN, PING, TRACEROUTE, NMAP, LLDP, VLAN, MAC SPOOF, WIREGUARD, RESULTS.
+
+### Jack Test
+- **Dependencies:** `nmcli` (IP/gateway/DHCP), `lldpctl`/`lldpd` (switch name/port),
+  `tcpdump` (VLAN). Link, speed, and duplex are read from sysfs and need no tool.
+- **Privilege:** VLAN observation uses the restricted `jellybox-sniff` helper.
+- **Purpose:** plug the Ethernet port into an unknown wall jack, patch cable, or
+  outlet and run one test. It reports link, speed/duplex, DHCP status, IP,
+  gateway, the LLDP switch name and port, and any observed VLAN IDs on one
+  screen. Read-only; it never changes network or switch configuration.
+- **Limitations:** LLDP shows `NOT DETECTED` when the switch doesn't advertise
+  it (or `lldpd` isn't running). VLANs show `NOT OBSERVED` when no tagged frames
+  are captured. The test runs on a background thread so the UI stays responsive.
+- **Saving:** press Left to save the result. You can enter an optional location
+  label (e.g. a room number) on the on-screen keyboard; the saved summary reads
+  like `Room 205 / SW-03 / Gi1/0/17 / VLAN 120`. Saved jacks appear under RESULTS.
 
 ### Wi-Fi Scan / Connect
 - **Dependency:** `nmcli` (NetworkManager)
